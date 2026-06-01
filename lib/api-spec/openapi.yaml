@@ -1,22 +1,24 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Embed Manager API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: folders
+    description: Folder operations
+  - name: embeds
+    description: Embed operations
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +26,255 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /folders:
+    get:
+      operationId: listFolders
+      tags: [folders]
+      summary: List all folders
+      responses:
+        "200":
+          description: List of folders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Folder"
+    post:
+      operationId: createFolder
+      tags: [folders]
+      summary: Create a folder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FolderInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Folder"
+
+  /folders/{id}:
+    get:
+      operationId: getFolder
+      tags: [folders]
+      summary: Get a folder by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Folder
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Folder"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateFolder
+      tags: [folders]
+      summary: Update a folder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FolderUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Folder"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteFolder
+      tags: [folders]
+      summary: Delete a folder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+
+  /embeds:
+    get:
+      operationId: listEmbeds
+      tags: [embeds]
+      summary: List embeds, optionally filtered by folder
+      parameters:
+        - name: folderId
+          in: query
+          required: false
+          schema:
+            type: ["integer", "null"]
+        - name: unorganized
+          in: query
+          required: false
+          schema:
+            type: ["boolean", "null"]
+      responses:
+        "200":
+          description: List of embeds
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Embed"
+    post:
+      operationId: createEmbed
+      tags: [embeds]
+      summary: Create an embed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmbedInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Embed"
+
+  /embeds/bulk-delete:
+    post:
+      operationId: bulkDeleteEmbeds
+      tags: [embeds]
+      summary: Delete multiple embeds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkIds"
+      responses:
+        "200":
+          description: Deleted count
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkResult"
+
+  /embeds/bulk-move:
+    post:
+      operationId: bulkMoveEmbeds
+      tags: [embeds]
+      summary: Move multiple embeds to a folder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BulkMove"
+      responses:
+        "200":
+          description: Moved count
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkResult"
+
+  /embeds/{id}:
+    get:
+      operationId: getEmbed
+      tags: [embeds]
+      summary: Get an embed by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Embed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Embed"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateEmbed
+      tags: [embeds]
+      summary: Update an embed
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmbedUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Embed"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteEmbed
+      tags: [embeds]
+      summary: Delete an embed
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+
+  /stats:
+    get:
+      operationId: getStats
+      tags: [embeds]
+      summary: Get summary statistics
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +285,143 @@ components:
       required:
         - status
 
+    Folder:
+      type: object
+      required: [id, name, createdAt, embedCount]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        parentId:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+        embedCount:
+          type: integer
+
+    FolderInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        parentId:
+          type: ["integer", "null"]
+
+    FolderUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        parentId:
+          type: ["integer", "null"]
+
+    Embed:
+      type: object
+      required: [id, title, embedCode, createdAt]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: ["string", "null"]
+        embedCode:
+          type: string
+        thumbnail:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        source:
+          type: ["string", "null"]
+        folderId:
+          type: ["integer", "null"]
+        folderName:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    EmbedInput:
+      type: object
+      required: [title, embedCode]
+      properties:
+        title:
+          type: string
+          minLength: 1
+        url:
+          type: string
+        embedCode:
+          type: string
+          minLength: 1
+        thumbnail:
+          type: string
+        description:
+          type: string
+        source:
+          type: string
+        folderId:
+          type: ["integer", "null"]
+
+    EmbedUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+        url:
+          type: string
+        embedCode:
+          type: string
+        thumbnail:
+          type: string
+        description:
+          type: string
+        source:
+          type: string
+        folderId:
+          type: ["integer", "null"]
+
+    BulkIds:
+      type: object
+      required: [ids]
+      properties:
+        ids:
+          type: array
+          items:
+            type: integer
+
+    BulkMove:
+      type: object
+      required: [ids]
+      properties:
+        ids:
+          type: array
+          items:
+            type: integer
+        folderId:
+          type: ["integer", "null"]
+
+    BulkResult:
+      type: object
+      required: [count]
+      properties:
+        count:
+          type: integer
+
+    Stats:
+      type: object
+      required: [totalEmbeds, totalFolders, unorganizedCount, recentEmbeds]
+      properties:
+        totalEmbeds:
+          type: integer
+        totalFolders:
+          type: integer
+        unorganizedCount:
+          type: integer
+        recentEmbeds:
+          type: array
+          items:
+            $ref: "#/components/schemas/Embed"
