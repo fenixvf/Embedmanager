@@ -87,21 +87,6 @@ export function EmbedCard({
             </div>
           )}
 
-          {/* Copy button — always visible on hover in normal mode, hidden in select mode */}
-          {!selectionMode && (
-            <button
-              onClick={handleCopy}
-              data-testid={`button-copy-${embed.id}`}
-              className="absolute bottom-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity bg-background/90 hover:bg-background border border-border rounded p-1.5 shadow-sm"
-              title="Copiar código de incorporação"
-            >
-              {copied ? (
-                <Check className="w-3.5 h-3.5 text-green-500" />
-              ) : (
-                <Copy className="w-3.5 h-3.5 text-foreground" />
-              )}
-            </button>
-          )}
 
           {/* Selection checkbox */}
           {selectionMode && (
@@ -119,17 +104,37 @@ export function EmbedCard({
           >
             {embed.title}
           </h3>
-          <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
+          <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground gap-1">
             {showFolder ? (
-              <span className="bg-secondary px-1.5 py-0.5 rounded text-[10px] truncate max-w-[80px] md:max-w-[100px]">
+              <span className="bg-secondary px-1.5 py-0.5 rounded text-[10px] truncate max-w-[70px] md:max-w-[90px]">
                 {embed.folderName || "Sem pasta"}
               </span>
             ) : (
-              <span className="text-[10px] text-muted-foreground">
+              <span className="text-[10px] text-muted-foreground truncate">
                 {embed.source || ""}
               </span>
             )}
-            <span className="shrink-0">{format(new Date(embed.createdAt), "dd/MM")}</span>
+            <div className="flex items-center gap-1 shrink-0">
+              <span>{format(new Date(embed.createdAt), "dd/MM")}</span>
+              {!selectionMode && (
+                <button
+                  onClick={handleCopy}
+                  data-testid={`button-copy-${embed.id}`}
+                  className={`ml-0.5 rounded p-1 border transition-colors ${
+                    copied
+                      ? "border-green-500 bg-green-500/10 text-green-500"
+                      : "border-border bg-muted hover:bg-accent hover:text-foreground text-muted-foreground"
+                  }`}
+                  title="Copiar link de incorporação"
+                >
+                  {copied ? (
+                    <Check className="w-3 h-3" />
+                  ) : (
+                    <Copy className="w-3 h-3" />
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
