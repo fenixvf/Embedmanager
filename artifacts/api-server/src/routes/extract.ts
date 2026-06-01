@@ -135,7 +135,7 @@ function extractIframes(html: string, pageUrl: string): Array<{ embedCode: strin
 }
 
 router.post("/extract", async (req, res) => {
-  const body = ExtractEmbedBody.parse(req.body);
+  const body = ExtractEmbedsBody.parse(req.body);
   const rawUrl = body.url.trim();
 
   // Normalise URL
