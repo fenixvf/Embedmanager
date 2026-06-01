@@ -33,31 +33,30 @@ import {
 } from "./ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 
-interface LayoutProps {
-  children: ReactNode;
+// ─── Sidebar ────────────────────────────────────────────────────────────────
+// Defined OUTSIDE Layout so it is never re-created on parent re-renders,
+// which would unmount inputs and close the mobile keyboard mid-typing.
+
+interface SidebarContentProps {
+  onClose: () => void;
+  deletingId: number | null;
+  setDeletingId: (id: number | null) => void;
 }
 
-export function Layout({ children }: LayoutProps) {
+function SidebarContent({ onClose, deletingId, setDeletingId }: SidebarContentProps) {
   const [location] = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: folders } = useListFolders();
   const { data: stats } = useGetStats();
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  // Create folder
   const [isCreating, setIsCreating] = useState(false);
   const [newName, setNewName] = useState("");
   const createRef = useRef<HTMLInputElement>(null);
 
-  // Rename folder
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const editRef = useRef<HTMLInputElement>(null);
-
-  // Delete folder
-  const [deletingId, setDeletingId] = useState<number | null>(null);
-  const deletingFolder = folders?.find((f) => f.id === deletingId);
 
   const createMutation = useCreateFolder({
     mutation: {
@@ -81,22 +80,19 @@ export function Layout({ children }: LayoutProps) {
     },
   });
 
-  const deleteMutation = useDeleteFolder({
-    mutation: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: getListFoldersQueryKey() });
-        setDeletingId(null);
-        toast({ title: "Pasta excluída" });
-      },
-    },
-  });
-
   useEffect(() => {
-    if (isCreating) setTimeout(() => createRef.current?.focus(), 50);
+    if (isCreating) {
+      // Delay so the element has time to mount before focusing
+      const t = setTimeout(() => createRef.current?.focus(), 80);
+      return () => clearTimeout(t);
+    }
   }, [isCreating]);
 
   useEffect(() => {
-    if (editingId !== null) setTimeout(() => editRef.current?.focus(), 50);
+    if (editingId !== null) {
+      const t = setTimeout(() => editRef.current?.focus(), 80);
+      return () => clearTimeout(t);
+    }
   }, [editingId]);
 
   const handleCreate = () => {
@@ -111,11 +107,6 @@ export function Layout({ children }: LayoutProps) {
     updateMutation.mutate({ id, data: { name } });
   };
 
-  const handleDelete = () => {
-    if (deletingId == null) return;
-    deleteMutation.mutate({ id: deletingId });
-  };
-
   const startEdit = (id: number, currentName: string) => {
     setEditingId(id);
     setEditName(currentName);
@@ -128,7 +119,7 @@ export function Layout({ children }: LayoutProps) {
         : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
     }`;
 
-  const SidebarContent = () => (
+  return (
     <>
       {/* Header */}
       <div className="p-4 border-b h-16 flex items-center justify-between shrink-0">
@@ -140,7 +131,7 @@ export function Layout({ children }: LayoutProps) {
           variant="ghost"
           size="icon"
           className="lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+          onClick={onClose}
           data-testid="button-close-sidebar"
         >
           <X className="w-5 h-5" />
@@ -151,21 +142,13 @@ export function Layout({ children }: LayoutProps) {
         {/* Nav links */}
         <div className="space-y-1 mb-6">
           <Link href="/">
-            <div
-              className={navLinkClass("/")}
-              onClick={() => setSidebarOpen(false)}
-              data-testid="link-dashboard"
-            >
+            <div className={navLinkClass("/")} onClick={onClose} data-testid="link-dashboard">
               <LayoutDashboard className="w-4 h-4" />
               Dashboard
             </div>
           </Link>
           <Link href="/library">
-            <div
-              className={navLinkClass("/library")}
-              onClick={() => setSidebarOpen(false)}
-              data-testid="link-library"
-            >
+            <div className={navLinkClass("/library")} onClick={onClose} data-testid="link-library">
               <Library className="w-4 h-4" />
               Library
               {stats?.unorganizedCount ? (
@@ -177,7 +160,7 @@ export function Layout({ children }: LayoutProps) {
           </Link>
         </div>
 
-        {/* Folders section */}
+        {/* Folders heading */}
         <div className="mb-2 px-3 flex items-center justify-between">
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             Pastas
@@ -206,26 +189,29 @@ export function Layout({ children }: LayoutProps) {
                   if (e.key === "Escape") setIsCreating(false);
                 }}
                 placeholder="Nome da pasta"
-                className="h-7 text-xs px-2 bg-background"
+                className="h-8 text-sm px-2 bg-background"
                 data-testid="input-new-folder"
+                autoComplete="off"
+                inputMode="text"
               />
               <button
                 onClick={handleCreate}
                 disabled={createMutation.isPending}
-                className="p-1 rounded hover:bg-primary/20 text-primary"
+                className="p-1.5 rounded hover:bg-primary/20 text-primary shrink-0"
                 data-testid="button-confirm-create"
               >
                 <Check className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setIsCreating(false)}
-                className="p-1 rounded hover:bg-muted text-muted-foreground"
+                className="p-1.5 rounded hover:bg-muted text-muted-foreground shrink-0"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
           )}
 
+          {/* Folder rows */}
           {folders?.map((folder) => (
             <div
               key={folder.id}
@@ -236,7 +222,6 @@ export function Layout({ children }: LayoutProps) {
               }`}
             >
               {editingId === folder.id ? (
-                /* Rename inline input */
                 <>
                   <Folder className="w-4 h-4 shrink-0 text-muted-foreground" />
                   <Input
@@ -247,31 +232,32 @@ export function Layout({ children }: LayoutProps) {
                       if (e.key === "Enter") handleRename(folder.id);
                       if (e.key === "Escape") setEditingId(null);
                     }}
-                    className="h-6 text-xs px-1.5 bg-background flex-1 min-w-0"
+                    className="h-8 text-sm px-2 bg-background flex-1 min-w-0"
                     data-testid={`input-rename-${folder.id}`}
+                    autoComplete="off"
+                    inputMode="text"
                   />
                   <button
                     onClick={() => handleRename(folder.id)}
                     disabled={updateMutation.isPending}
-                    className="p-0.5 rounded hover:bg-primary/20 text-primary shrink-0"
+                    className="p-1.5 rounded hover:bg-primary/20 text-primary shrink-0"
                     data-testid={`button-confirm-rename-${folder.id}`}
                   >
                     <Check className="w-3 h-3" />
                   </button>
                   <button
                     onClick={() => setEditingId(null)}
-                    className="p-0.5 rounded hover:bg-muted text-muted-foreground shrink-0"
+                    className="p-1.5 rounded hover:bg-muted text-muted-foreground shrink-0"
                   >
                     <X className="w-3 h-3" />
                   </button>
                 </>
               ) : (
-                /* Normal folder row */
                 <>
                   <Link
                     href={`/folder/${folder.id}`}
                     className="flex items-center gap-2 flex-1 min-w-0"
-                    onClick={() => setSidebarOpen(false)}
+                    onClick={onClose}
                     data-testid={`link-folder-${folder.id}`}
                   >
                     <Folder className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
@@ -280,7 +266,6 @@ export function Layout({ children }: LayoutProps) {
                       {folder.embedCount}
                     </span>
                   </Link>
-                  {/* Action buttons — visible on hover */}
                   <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-1">
                     <button
                       onClick={(e) => { e.preventDefault(); startEdit(folder.id, folder.name); }}
@@ -324,12 +309,48 @@ export function Layout({ children }: LayoutProps) {
       </div>
     </>
   );
+}
+
+// ─── Layout ─────────────────────────────────────────────────────────────────
+
+interface LayoutProps {
+  children: ReactNode;
+}
+
+export function Layout({ children }: LayoutProps) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  const { data: folders } = useListFolders();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const deletingFolder = folders?.find((f) => f.id === deletingId);
+
+  const deleteMutation = useDeleteFolder({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: getListFoldersQueryKey() });
+        setDeletingId(null);
+        toast({ title: "Pasta excluída" });
+      },
+    },
+  });
+
+  const handleDelete = () => {
+    if (deletingId == null) return;
+    deleteMutation.mutate({ id: deletingId });
+  };
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-64 border-r bg-sidebar flex-col shrink-0">
-        <SidebarContent />
+        <SidebarContent
+          onClose={() => setSidebarOpen(false)}
+          deletingId={deletingId}
+          setDeletingId={setDeletingId}
+        />
       </aside>
 
       {/* Mobile overlay */}
@@ -347,7 +368,11 @@ export function Layout({ children }: LayoutProps) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <SidebarContent />
+        <SidebarContent
+          onClose={() => setSidebarOpen(false)}
+          deletingId={deletingId}
+          setDeletingId={setDeletingId}
+        />
       </aside>
 
       <main className="flex-1 flex flex-col overflow-hidden relative min-w-0">
