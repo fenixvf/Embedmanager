@@ -26,6 +26,8 @@ import type {
   Embed,
   EmbedInput,
   EmbedUpdate,
+  ExtractInput,
+  ExtractResult,
   Folder,
   FolderInput,
   FolderUpdate,
@@ -1004,6 +1006,77 @@ export const useDeleteEmbed = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getDeleteEmbedMutationOptions(options));
+    }
+
+export const getExtractEmbedsUrl = () => {
+
+
+
+
+  return `/api/extract`
+}
+
+/**
+ * @summary Extract embed codes from a URL
+ */
+export const extractEmbeds = async (extractInput: ExtractInput, options?: RequestInit): Promise<ExtractResult> => {
+
+  return customFetch<ExtractResult>(getExtractEmbedsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      extractInput,)
+  }
+);}
+
+
+
+
+export const getExtractEmbedsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof extractEmbeds>>, TError,{data: BodyType<ExtractInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof extractEmbeds>>, TError,{data: BodyType<ExtractInput>}, TContext> => {
+
+const mutationKey = ['extractEmbeds'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof extractEmbeds>>, {data: BodyType<ExtractInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  extractEmbeds(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ExtractEmbedsMutationResult = NonNullable<Awaited<ReturnType<typeof extractEmbeds>>>
+    export type ExtractEmbedsMutationBody = BodyType<ExtractInput>
+    export type ExtractEmbedsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Extract embed codes from a URL
+ */
+export const useExtractEmbeds = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof extractEmbeds>>, TError,{data: BodyType<ExtractInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof extractEmbeds>>,
+        TError,
+        {data: BodyType<ExtractInput>},
+        TContext
+      > => {
+      return useMutation(getExtractEmbedsMutationOptions(options));
     }
 
 export const getGetStatsUrl = () => {

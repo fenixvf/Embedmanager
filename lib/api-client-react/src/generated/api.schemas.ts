@@ -90,6 +90,24 @@ export interface BulkResult {
   count: number;
 }
 
+export interface ExtractInput {
+  url: string;
+}
+
+export interface ExtractedEmbed {
+  title?: string;
+  url?: string;
+  embedCode: string;
+  source?: string;
+  thumbnail?: string;
+}
+
+export interface ExtractResult {
+  url: string;
+  pageTitle?: string;
+  embeds: ExtractedEmbed[];
+}
+
 export interface Stats {
   totalEmbeds: number;
   totalFolders: number;

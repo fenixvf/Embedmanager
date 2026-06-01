@@ -13,6 +13,8 @@ tags:
     description: Folder operations
   - name: embeds
     description: Embed operations
+  - name: extract
+    description: URL extraction operations
 paths:
   /healthz:
     get:
@@ -262,6 +264,25 @@ paths:
         "404":
           description: Not found
 
+  /extract:
+    post:
+      operationId: extractEmbeds
+      tags: [extract]
+      summary: Extract embed codes from a URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExtractInput"
+      responses:
+        "200":
+          description: Extracted embeds
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtractResult"
+
   /stats:
     get:
       operationId: getStats
@@ -410,6 +431,41 @@ components:
       properties:
         count:
           type: integer
+
+    ExtractInput:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+
+    ExtractedEmbed:
+      type: object
+      required: [embedCode]
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        embedCode:
+          type: string
+        source:
+          type: string
+        thumbnail:
+          type: string
+
+    ExtractResult:
+      type: object
+      required: [url, embeds]
+      properties:
+        url:
+          type: string
+        pageTitle:
+          type: string
+        embeds:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExtractedEmbed"
 
     Stats:
       type: object

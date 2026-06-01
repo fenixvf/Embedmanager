@@ -219,6 +219,26 @@ export const DeleteEmbedParams = zod.object({
 
 
 /**
+ * @summary Extract embed codes from a URL
+ */
+export const ExtractEmbedsBody = zod.object({
+  "url": zod.string()
+})
+
+export const ExtractEmbedsResponse = zod.object({
+  "url": zod.string(),
+  "pageTitle": zod.string().optional(),
+  "embeds": zod.array(zod.object({
+  "title": zod.string().optional(),
+  "url": zod.string().optional(),
+  "embedCode": zod.string(),
+  "source": zod.string().optional(),
+  "thumbnail": zod.string().optional()
+}))
+})
+
+
+/**
  * @summary Get summary statistics
  */
 export const GetStatsResponse = zod.object({
