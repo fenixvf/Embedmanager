@@ -266,7 +266,7 @@ function SidebarContent({ onClose, deletingId, setDeletingId }: SidebarContentPr
                       {folder.embedCount}
                     </span>
                   </Link>
-                  <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-1">
+                  <div className="flex items-center gap-0.5 shrink-0 ml-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={(e) => { e.preventDefault(); startEdit(folder.id, folder.name); }}
                       className="p-1 rounded hover:bg-primary/20 text-muted-foreground hover:text-primary"

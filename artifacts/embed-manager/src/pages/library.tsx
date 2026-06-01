@@ -8,7 +8,6 @@ import {
   getGetStatsQueryKey,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useLocation } from "wouter";
 import { Video, Search, CheckSquare, Folder as FolderIcon, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,8 +23,7 @@ import {
 } from "@/components/ui/dialog";
 
 export function Library() {
-  const [, setLocation] = useLocation();
-  const { data: embeds, isLoading } = useListEmbeds();
+  const { data: embeds, isLoading } = useListEmbeds({ unorganized: true });
   const [search, setSearch] = useState("");
 
   const [selectionMode, setSelectionMode] = useState(false);
@@ -95,7 +93,7 @@ export function Library() {
     <div className="flex flex-col h-full bg-background">
       {/* Header */}
       <div className="border-b flex flex-col sm:flex-row sm:items-center px-4 md:px-6 py-3 md:py-0 md:h-16 gap-2 sm:gap-4 shrink-0 bg-card">
-        <h1 className="text-lg md:text-xl font-bold flex-1">Todos os Embeds</h1>
+        <h1 className="text-lg md:text-xl font-bold flex-1">Sem pasta</h1>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <div className="relative flex-1 sm:w-56">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -186,9 +184,9 @@ export function Library() {
             <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
               <Video className="w-6 h-6 text-muted-foreground" />
             </div>
-            <h3 className="text-base md:text-lg font-medium">Nenhum embed encontrado</h3>
+            <h3 className="text-base md:text-lg font-medium">Tudo organizado!</h3>
             <p className="text-muted-foreground text-sm max-w-xs mt-1">
-              Tente ajustar a busca ou adicione novos embeds.
+              Nenhum embed sem pasta. Adicione novos ou mova os existentes para cá.
             </p>
           </div>
         )}
