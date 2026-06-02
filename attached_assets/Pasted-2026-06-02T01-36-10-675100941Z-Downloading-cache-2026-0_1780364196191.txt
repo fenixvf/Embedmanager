@@ -1,0 +1,26 @@
+2026-06-02T01:36:10.675100941Z ==> Downloading cache...
+2026-06-02T01:36:10.719129362Z ==> Cloning from https://github.com/fenixvf/Embedmanager
+2026-06-02T01:36:11.229595266Z ==> Checking out commit b457d2d90218025e9d386741afdd3bc39fb7be10 in branch main
+2026-06-02T01:36:16.270327134Z ==> Downloaded 90MB in 3s. Extraction took 3s.
+2026-06-02T01:36:20.841982571Z ==> Using Node.js version 24.14.1 (default)
+2026-06-02T01:36:20.842000181Z ==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+2026-06-02T01:36:20.893455917Z ==> Running build command 'node --enable-source-maps artifacts/api-server/dist/index.mjs'...
+2026-06-02T01:36:20.982891901Z node:internal/modules/cjs/loader:1459
+2026-06-02T01:36:20.982909712Z   throw err;
+2026-06-02T01:36:20.982913622Z   ^
+2026-06-02T01:36:20.982917232Z 
+2026-06-02T01:36:20.982921252Z Error: Cannot find module '/opt/render/project/src/artifacts/api-server/dist/index.mjs'
+2026-06-02T01:36:20.982924712Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1456:15)
+2026-06-02T01:36:20.982928012Z     at defaultResolveImpl (node:internal/modules/cjs/loader:1066:19)
+2026-06-02T01:36:20.982931402Z     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1071:22)
+2026-06-02T01:36:20.982933993Z     at Module._load (node:internal/modules/cjs/loader:1242:25)
+2026-06-02T01:36:20.982936093Z     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+2026-06-02T01:36:20.982938063Z     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+2026-06-02T01:36:20.982940393Z     at node:internal/main/run_main_module:33:47 {
+2026-06-02T01:36:20.982944243Z   code: 'MODULE_NOT_FOUND',
+2026-06-02T01:36:20.982948013Z   requireStack: []
+2026-06-02T01:36:20.982951023Z }
+2026-06-02T01:36:20.982954193Z 
+2026-06-02T01:36:20.982975814Z Node.js v24.14.1
+2026-06-02T01:36:21.042521951Z ==> Build failed 😞
+2026-06-02T01:36:21.042553562Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
