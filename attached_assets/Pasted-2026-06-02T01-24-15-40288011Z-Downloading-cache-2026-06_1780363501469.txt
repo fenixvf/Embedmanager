@@ -1,0 +1,35 @@
+2026-06-02T01:24:15.40288011Z ==> Downloading cache...
+2026-06-02T01:24:15.4393158Z ==> Cloning from https://github.com/fenixvf/Embedmanager
+2026-06-02T01:24:20.96599683Z ==> Checking out commit 3bb1adfa5fa7cd0deafc8c90fbd74358366568e4 in branch main
+2026-06-02T01:24:27.116332434Z ==> Downloaded 90MB in 9s. Extraction took 3s.
+2026-06-02T01:24:30.52293471Z ==> Using Node.js version 24.14.1 (default)
+2026-06-02T01:24:30.522949641Z ==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+2026-06-02T01:24:30.567548708Z ==> Running build command 'pnpm --filter @workspace/api-server run build'...
+2026-06-02T01:24:31.036621299Z 
+2026-06-02T01:24:31.036650491Z > @workspace/api-server@0.0.0 build /opt/render/project/src/artifacts/api-server
+2026-06-02T01:24:31.036656151Z > node ./build.mjs
+2026-06-02T01:24:31.036658741Z 
+2026-06-02T01:24:31.068298878Z node:internal/modules/package_json_reader:301
+2026-06-02T01:24:31.0683202Z   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+2026-06-02T01:24:31.068323Z         ^
+2026-06-02T01:24:31.0683253Z 
+2026-06-02T01:24:31.068327961Z Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'esbuild' imported from /opt/render/project/src/artifacts/api-server/build.mjs
+2026-06-02T01:24:31.068330651Z     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+2026-06-02T01:24:31.068333111Z     at packageResolve (node:internal/modules/esm/resolve:768:81)
+2026-06-02T01:24:31.068335131Z     at moduleResolve (node:internal/modules/esm/resolve:859:18)
+2026-06-02T01:24:31.068337121Z     at defaultResolve (node:internal/modules/esm/resolve:991:11)
+2026-06-02T01:24:31.068339101Z     at #cachedDefaultResolve (node:internal/modules/esm/loader:719:20)
+2026-06-02T01:24:31.068341071Z     at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:736:38)
+2026-06-02T01:24:31.068343371Z     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:765:52)
+2026-06-02T01:24:31.068345342Z     at #resolve (node:internal/modules/esm/loader:701:17)
+2026-06-02T01:24:31.068347332Z     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:621:35)
+2026-06-02T01:24:31.068349312Z     at ModuleJob.syncLink (node:internal/modules/esm/module_job:160:33) {
+2026-06-02T01:24:31.068352182Z   code: 'ERR_MODULE_NOT_FOUND'
+2026-06-02T01:24:31.068354162Z }
+2026-06-02T01:24:31.068356022Z 
+2026-06-02T01:24:31.068357983Z Node.js v24.14.1
+2026-06-02T01:24:31.083268908Z /opt/render/project/src/artifacts/api-server:
+2026-06-02T01:24:31.08329238Z  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/api-server@0.0.0 build: `node ./build.mjs`
+2026-06-02T01:24:31.08329824Z Exit status 1
+2026-06-02T01:24:31.138879369Z ==> Build failed 😞
+2026-06-02T01:24:31.13889641Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
