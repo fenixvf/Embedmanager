@@ -1,0 +1,26 @@
+2026-06-02T01:38:42.302873462Z ==> Downloading cache...
+2026-06-02T01:38:42.339161315Z ==> Cloning from https://github.com/fenixvf/Embedmanager
+2026-06-02T01:38:42.877986006Z ==> Checking out commit b457d2d90218025e9d386741afdd3bc39fb7be10 in branch main
+2026-06-02T01:38:46.511479364Z ==> Downloaded 90MB in 2s. Extraction took 2s.
+2026-06-02T01:38:50.318165658Z ==> Using Node.js version 24.14.1 (default)
+2026-06-02T01:38:50.318175358Z ==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+2026-06-02T01:38:50.363508499Z ==> Running build command 'node --enable-source-maps pnpm install && pnpm --filter @workspace/api-server run build'...
+2026-06-02T01:38:50.452596492Z node:internal/modules/cjs/loader:1459
+2026-06-02T01:38:50.452619773Z   throw err;
+2026-06-02T01:38:50.452624473Z   ^
+2026-06-02T01:38:50.452628163Z 
+2026-06-02T01:38:50.452632793Z Error: Cannot find module '/opt/render/project/src/pnpm'
+2026-06-02T01:38:50.452637353Z     at Module._resolveFilename (node:internal/modules/cjs/loader:1456:15)
+2026-06-02T01:38:50.452641573Z     at defaultResolveImpl (node:internal/modules/cjs/loader:1066:19)
+2026-06-02T01:38:50.452645503Z     at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1071:22)
+2026-06-02T01:38:50.452649223Z     at Module._load (node:internal/modules/cjs/loader:1242:25)
+2026-06-02T01:38:50.452653263Z     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+2026-06-02T01:38:50.452657743Z     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+2026-06-02T01:38:50.452662623Z     at node:internal/main/run_main_module:33:47 {
+2026-06-02T01:38:50.452667004Z   code: 'MODULE_NOT_FOUND',
+2026-06-02T01:38:50.452671754Z   requireStack: []
+2026-06-02T01:38:50.452675664Z }
+2026-06-02T01:38:50.452679144Z 
+2026-06-02T01:38:50.452682974Z Node.js v24.14.1
+2026-06-02T01:38:50.490653528Z ==> Build failed 😞
+2026-06-02T01:38:50.490671898Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
